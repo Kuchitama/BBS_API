@@ -5,10 +5,14 @@ import org.joda.time.DateTime
 import play.api.mvc._
 import util.LoggerFeature
 
-import scala.concurrent.Await
 import skinny.util.JSONStringOps._
 import entities.{User, Thread}
 
+import scala.concurrent.ExecutionContext.Implicits._
+import scala.concurrent._
+import scalaz._
+import Scalaz._
+import scalaz.std.scalaFuture._
 
 object ThreadController extends Controller with FutureTimeoutFeature with LoggerFeature {
 
@@ -26,11 +30,13 @@ object ThreadController extends Controller with FutureTimeoutFeature with Logger
 
        // TODO get user
        val user  = new User(1, "temp_user@loclhost", "password", DateTime.now())
+       val fut = ThreadDao.create(title, tags, user).flatMap{ idOpt =>
+         val temp = idOpt.map(id => ThreadDao.findById(id))
+           temp.sequence.map(_.flatten)
+       }
+       val thread = Await.result(fut, timeout).getOrElse(throw new RuntimeException(s"Created thread is not found."))
 
-       val id = Await.result(ThreadDao.create(title, tags, user), timeout)
-
-       // TODO return created thread info
-       Ok(s"""{result: "success:${id}"""")
+       Ok(toJSONString(thread))
      } getOrElse {
        BadRequest("Expecting Json data")
      }

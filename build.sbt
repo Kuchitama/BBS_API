@@ -11,7 +11,8 @@ libraryDependencies ++= Seq(
   cache,
   ws,
   "org.slf4j" % "slf4j-nop" % "1.6.4",
-  "org.skinny-framework" %% "skinny-json" % "1.3.18"
+  "org.skinny-framework" %% "skinny-json" % "1.3.18",
+  "org.scalaz" %% "scalaz-core" % "7.1.2"
 ) ++ databaseDependencies ++ testDependencies
 
 lazy val databaseDependencies = Seq(
