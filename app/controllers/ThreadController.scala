@@ -27,10 +27,10 @@ object ThreadController extends Controller with FutureTimeoutFeature with Logger
        // TODO get user
        val user  = new User(1, "temp_user@loclhost", "password", DateTime.now())
 
-       Await.result(ThreadDao.create(title, tags, user), timeout)
+       val id = Await.result(ThreadDao.create(title, tags, user), timeout)
 
        // TODO return created thread info
-       Ok("""{result: "success"}""")
+       Ok(s"""{result: "success:${id}"""")
      } getOrElse {
        BadRequest("Expecting Json data")
      }

@@ -9,7 +9,7 @@ import com.github.tototoshi.slick.H2JodaSupport._
  * Created by kunihira on 15/05/31.
  */
 class Threads(tag: Tag) extends  Table[(Option[Long], String, String, Long, DateTime, DateTime)](tag, "THREAD"){
-  def id: Rep[Option[Long]] = column[Option[Long]]("ID")
+  def id: Rep[Option[Long]] = column[Option[Long]]("ID", O.PrimaryKey, O.AutoInc)
   def title: Rep[String] = column[String]("TITLE")
   def tags: Rep[String] = column[String]("TAGS")
   def createdAccountId: Rep[Long] = column[Long]("CREATED_ACCOUNT_ID")

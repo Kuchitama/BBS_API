@@ -23,7 +23,9 @@ object ThreadDao extends UseDBFeature with CurrentTimeFeature {
    */
   def create(title:String, tags: Seq[Thread.Tag], user: User, now: DateTime = currentTime) = useDB{ db =>
     val value = (None, title, tags.mkString(","), user.id, now, now)
-    db.run(DBIO.seq(Threads.tableQuery += value))
+    val threads = Threads.tableQuery
+    val insert = (threads returning threads.map(_.id) into ((thread, id) => thread.copy(_1 = Some(id)))) += value
+    db.run(insert).map(_._1.flatten)
   }
 
 
