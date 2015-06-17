@@ -40,4 +40,10 @@ object PostController extends Controller with FutureTimeoutFeature with AuthFeat
       throw new IllegalArgumentException("Expecting Json data")
     }
   }
+
+  def delete(id:Long, threadId: Long) = Action {implicit request =>
+    val user = auth
+    Await.result(PostDao.deleteByIdAndThreadId(id, threadId), timeout)
+    Ok("""{result: "deleted post"}""")
+  }
 }

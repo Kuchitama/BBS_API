@@ -20,7 +20,7 @@ object PostDao extends UseDBFeature with CurrentTimeFeature {
   }
 
   def validateLimitOfThreadPostCount(threadId: Long): Future[Either[Throwable, Unit]] = countByThreadId(threadId).map { count =>
-    if (count <= 1000) Right() else Left(new IllegalStateException(s"thread has limited count posts."))
+    if (count <= 1000) Right(Unit) else Left(new IllegalStateException(s"thread has limited count posts."))
   }
 
   def create(threadId: Long, content: String, user: User, now:DateTime = currentTime) = {
@@ -45,6 +45,11 @@ object PostDao extends UseDBFeature with CurrentTimeFeature {
         }
       }.getOrElse(throw new IllegalArgumentException("requested post is not found"))
     }.flatMap(findById(_))
+  }
+
+  def deleteByIdAndThreadId(id: Long, threadId: Long) = useDB{ db =>
+    val query = for(post <- Posts.tableQuery if post.id === id && post.threadId === threadId) yield post
+    db.run(query.delete)
   }
 
   def asPost: PartialFunction[(Option[Long], Long, String, DateTime, Long, DateTime, Long), Post] = {
