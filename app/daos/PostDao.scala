@@ -34,9 +34,23 @@ object PostDao extends UseDBFeature with CurrentTimeFeature {
     }
   }
 
+  def update(id: Long, threadId: Long, content: String, user: User, now: DateTime = currentTime) = {
+    findById(id).map(_.find(_.threadId == threadId)).flatMap {
+      _.map { value =>
+        useDB { db =>
+          val newValue = value.copy(content = content, updatedAt = now, updatedBy = user.id)
+          val query = for (post <- Posts.tableQuery if post.id === id && post.threadId === threadId) yield post
+          val updateAction = query.update(toTupple(newValue))
+          db.run(updateAction)
+        }
+      }.getOrElse(throw new IllegalArgumentException("requested post is not found"))
+    }.flatMap(findById(_))
+  }
+
   def asPost: PartialFunction[(Option[Long], Long, String, DateTime, Long, DateTime, Long), Post] = {
     case (id: Option[Long], threadId: Long, content: String,  createdTime: DateTime, createdBy: Long, updatedTime: DateTime, updatedBy: Long) => {
       Post(id.get, threadId, content, createdTime,createdBy, updatedTime, updatedBy)
     }
   }
+  private def toTupple(post: Post) = (Some(post.id), post.threadId, post.content, post.createdAt, post.createdBy, post.updatedAt, post.updatedBy)
 }

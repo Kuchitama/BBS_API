@@ -29,7 +29,15 @@ object PostController extends Controller with FutureTimeoutFeature with AuthFeat
   }
 
   def update(id:Long, threadId: Long) = Action{ implicit request =>
-    // TODO
-    Ok("hogehoge")
+    val user  = auth
+    request.body.asJson.map { json =>
+      val content = (json \ "content").as[String]
+      val post = Await.result(PostDao.update(id, threadId, content, user), timeout)
+        .getOrElse(throw new RuntimeException("fail to update post"))
+
+      Ok(toJSONString(post))
+    } getOrElse {
+      throw new IllegalArgumentException("Expecting Json data")
+    }
   }
 }
