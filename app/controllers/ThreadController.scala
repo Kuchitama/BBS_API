@@ -21,18 +21,20 @@ object ThreadController extends Controller with FutureTimeoutFeature with Logger
      request.body.asJson map { jValue =>
        logger.debug(s"======== ${jValue.toString}")
 
-       val title = (jValue \ "title").as[String]
+       val title = Option((jValue \ "title").as[String]).find(s=> 0 < s.size && s.size <= 40)
+         .getOrElse(throw new IllegalArgumentException("Invalid title length."))
        val tags: Seq[Thread.Tag] = (jValue \ "tags").as[List[Thread.Tag]]
 
        // TODO get user
        val user  = new User(1, "temp_user@loclhost", "password", DateTime.now())
 
-       val id = Await.result(ThreadDao.create(title, tags, user), timeout)
+       val idOpt = Await.result(ThreadDao.create(title, tags, user), timeout)
+       val thread = idOpt.flatMap(id => Await.result(ThreadDao.findById(id), timeout))
+                        .getOrElse(throw new IllegalArgumentException(s"Created thread is not found."))
 
-       // TODO return created thread info
-       Ok(s"""{result: "success:${id}"""")
+       Ok(toJSONString(thread))
      } getOrElse {
-       BadRequest("Expecting Json data")
+       throw new IllegalArgumentException("Expecting Json data")
      }
 
 
