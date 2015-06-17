@@ -12,11 +12,11 @@ class Threads(tag: Tag) extends  Table[(Option[Long], String, String, Long, Date
   def id: Rep[Option[Long]] = column[Option[Long]]("ID", O.PrimaryKey, O.AutoInc)
   def title: Rep[String] = column[String]("TITLE")
   def tags: Rep[String] = column[String]("TAGS")
-  def createdAccountId: Rep[Long] = column[Long]("CREATED_ACCOUNT_ID")
+  def createdBy: Rep[Long] = column[Long]("CREATED_BY")
   def createdTime: Rep[DateTime] = column[DateTime]("CREATED_TIME")
   def updatedTime: Rep[DateTime] = column[DateTime]("UPDATED_TIME")
 
-  def * : ProvenShape[(Option[Long], String, String, Long, DateTime, DateTime)] = (id, title, tags, createdAccountId, createdTime, updatedTime)
+  def * : ProvenShape[(Option[Long], String, String, Long, DateTime, DateTime)] = (id, title, tags, createdBy, createdTime, updatedTime)
 }
 object Threads {
   val tableQuery = TableQuery[Threads]
@@ -25,7 +25,7 @@ object Threads {
 case class Thread(id: Long,
   title: String,
   tags: List[Thread.Tag],
-  createdAccountId: Long,
+  createdBy: Long,
   createdTime: DateTime,
   updatedTime: DateTime)
 
@@ -35,11 +35,11 @@ object Thread {
   def apply(id: Long,
     title: String,
     tags: String,
-    createdAccountId: Long,
+    createdBy: Long,
     createdTime: DateTime,
     updatedTime: DateTime) = {
       val _tags = tags.split(",").map(_.trim).toList
-      new Thread(id, title, _tags, createdAccountId, createdTime, updatedTime)
+      new Thread(id, title, _tags, createdBy, createdTime, updatedTime)
   }
 }
 

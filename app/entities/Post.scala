@@ -6,7 +6,7 @@ import slick.lifted.ProvenShape
 import com.github.tototoshi.slick.H2JodaSupport._
 
 class Posts(tag: Tag) extends Table[(Option[Long], Long, String, DateTime, Long, DateTime, Long)](tag, "POST") {
-  def id = column[Option[Long]]("ID")
+  def id = column[Option[Long]]("ID", O.PrimaryKey, O.AutoInc)
   def threadId = column[Long]("THREAD_ID")
   def title = column[String]("CONTENT")
   def createdAt = column[DateTime]("CREATED_AT")

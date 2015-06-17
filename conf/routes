@@ -11,6 +11,8 @@ POST    /api/v1/bbs/threads                           controllers.ThreadControll
 
 # Post
 GET     /api/v1/bbs/threads/:threadId/posts/:id     controllers.PostController.index(id: Long, threadId:Long)
+POST    /api/v1/bbs/threads/:threadId/posts         controllers.PostController.create(threadId:Long)
+PUT     /api/v1/bbs/threads/:threadId/posts/:id     controllers.PostController.update(id: Long, threadId:Long)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
