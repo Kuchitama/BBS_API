@@ -13,10 +13,10 @@ class Threads(tag: Tag) extends  Table[(Option[Long], String, String, Long, Date
   def title: Rep[String] = column[String]("TITLE")
   def tags: Rep[String] = column[String]("TAGS")
   def createdBy: Rep[Long] = column[Long]("CREATED_BY")
-  def createdTime: Rep[DateTime] = column[DateTime]("CREATED_TIME")
-  def updatedTime: Rep[DateTime] = column[DateTime]("UPDATED_TIME")
+  def createdAt: Rep[DateTime] = column[DateTime]("CREATED_AT")
+  def updatedAt: Rep[DateTime] = column[DateTime]("UPDATED_AT")
 
-  def * : ProvenShape[(Option[Long], String, String, Long, DateTime, DateTime)] = (id, title, tags, createdBy, createdTime, updatedTime)
+  def * : ProvenShape[(Option[Long], String, String, Long, DateTime, DateTime)] = (id, title, tags, createdBy, createdAt, updatedAt)
 }
 object Threads {
   val tableQuery = TableQuery[Threads]
@@ -36,10 +36,10 @@ object Thread {
     title: String,
     tags: String,
     createdBy: Long,
-    createdTime: DateTime,
-    updatedTime: DateTime) = {
+    createdAt: DateTime,
+    updatedAt: DateTime) = {
       val _tags = tags.split(",").map(_.trim).toList
-      new Thread(id, title, _tags, createdBy, createdTime, updatedTime)
+      new Thread(id, title, _tags, createdBy, createdAt, updatedAt)
   }
 }
 

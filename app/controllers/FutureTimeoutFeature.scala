@@ -2,7 +2,7 @@ package controllers
 
 import java.util.concurrent.TimeUnit
 
-import util.ConfigFeature
+import utils.ConfigFeature
 
 import scala.concurrent.duration.Duration
 

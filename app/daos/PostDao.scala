@@ -2,9 +2,8 @@ package daos
 
 import entities._
 import org.joda.time.DateTime
-import play.api.Configuration
 import slick.driver.H2Driver.api._
-import util.ConfigFeature
+import utils.ConfigFeature
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

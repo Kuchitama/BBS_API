@@ -2,8 +2,11 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-# Home page
-GET     /                           controllers.Application.index
+# User
+GET     /api/v1/bbs/users/:id                       controllers.UserController.index(id: Long)
+POST    /api/v1/bbs/users                           controllers.UserController.create()
+
+# PUT     /api/v1/bbs/token                         controllers.UserController.issueToken()
 
 # Thread
 GET     /api/v1/bbs/threads/search                  controllers.ThreadController.search(q:String, offset:Option[Int], limit:Option[Int], strict:Boolean ?= true)

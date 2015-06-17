@@ -2,7 +2,7 @@
 import play.api._
 import play.api.mvc.RequestHeader
 import play.api.mvc.Results._
-import util.LoggerFeature
+import utils.LoggerFeature
 
 import scala.concurrent.{ExecutionException, Future}
 

@@ -1,9 +1,9 @@
 package utils
 
 import org.scalatest.FlatSpec
-import util.{StringToHash, HashedString}
+import utils.{StringToHash, HashedString}
 
-import util.StringToHash._
+import utils.StringToHash._
 
 /**
  * Created by kunihira on 15/05/23.

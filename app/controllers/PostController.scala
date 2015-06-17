@@ -3,7 +3,7 @@ package controllers
 import daos.PostDao
 import play.api.mvc._
 import skinny.util.JSONStringOps._
-import util.LoggerFeature
+import utils.LoggerFeature
 import scala.concurrent.ExecutionContext.Implicits.global
 
 import scala.concurrent.Await

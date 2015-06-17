@@ -2,7 +2,7 @@ package controllers
 
 import daos.ThreadDao
 import play.api.mvc._
-import util.{ConfigFeature, LoggerFeature}
+import utils.{ConfigFeature, LoggerFeature}
 
 import scala.concurrent.Await
 import skinny.util.JSONStringOps._
