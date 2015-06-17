@@ -34,6 +34,16 @@ object ThreadDao extends UseDBFeature with CurrentTimeFeature {
     db.run(filter.result).map(_.map(asThread))
   }
 
+  def findByTags(tags:List[Thread.Tag], offset:Int, limit:Int) = useDB {db =>
+    val filter = for(th <- Threads.tableQuery) yield th
+    val checkFunc = hasAllTag(tags)(_)
+    db.run(filter.result).map(_.map(asThread).find(checkFunc).drop(offset).take(limit))
+  }
+
+  def hasAllTag(tags: List[Thread.Tag])(th: Thread):Boolean = {
+    tags.forall(tag =>th.tags.exists(_ == tag))
+  }
+
 
   def asThread: PartialFunction[(Option[Long], String, String, Long, DateTime, DateTime), Thread] = {
     case (id: Option[Long], title: String, tags: String, accountId: Long, createdTime: DateTime, updatedTime: DateTime) => {

@@ -42,10 +42,24 @@ object ThreadController extends Controller
 
   def search(q:String, offset:Option[Int] = None, limit:Option[Int] = None, strict:Boolean = true) = Action { implicit request =>
     val user = auth
-    val _limit = limit.map(_.min(SearchLimit)).getOrElse(SearchLimit)
-    val _offset = offset.getOrElse(0)
+    val (_offset, _limit) = getOffsetAndLimit(offset, limit)
     val threads = Await.result(ThreadDao.findByTitle(q, _offset, _limit,strict), timeout).toList
 
     Ok(toJSONString(threads))
+  }
+
+  def searchByTags(tags: String, offset:Option[Int] = None, limit:Option[Int] = None) = Action{ implicit request =>
+    val user = auth
+    val _tags:List[Thread.Tag] = tags.split(",").map(_.trim).toList
+    val (_offset, _limit) = getOffsetAndLimit(offset, limit)
+    val threads = Await.result(ThreadDao.findByTags(_tags, _offset, _limit), timeout).toList
+
+    Ok(toJSONString(threads))
+  }
+
+  private def getOffsetAndLimit(offset: Option[Int], limit: Option[Int]): (Int, Int)= {
+    val _offset = offset.getOrElse(0)
+    val _limit = limit.map(_.min(SearchLimit)).getOrElse(SearchLimit)
+    (_offset, _limit)
   }
 }

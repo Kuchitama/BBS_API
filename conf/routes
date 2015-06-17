@@ -7,6 +7,7 @@ GET     /                           controllers.Application.index
 
 # Thread
 GET     /api/v1/bbs/threads/search                  controllers.ThreadController.search(q:String, offset:Option[Int], limit:Option[Int], strict:Boolean ?= true)
+GET     /api/v1/bbs/threads/search/tag              controllers.ThreadController.searchByTags(tags:String, offset:Option[Int], limit:Option[Int])
 GET     /api/v1/bbs/threads/:id                     controllers.ThreadController.index(id: Long)
 POST    /api/v1/bbs/threads                         controllers.ThreadController.create()
 
