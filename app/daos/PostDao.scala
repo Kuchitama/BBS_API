@@ -2,12 +2,16 @@ package daos
 
 import entities._
 import org.joda.time.DateTime
+import play.api.Configuration
 import slick.driver.H2Driver.api._
+import util.ConfigFeature
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-object PostDao extends UseDBFeature with CurrentTimeFeature {
+object PostDao extends UseDBFeature with CurrentTimeFeature with ConfigFeature {
+
+  val LimitOfPostCount: Int = config.getInt("thread.limitPostCount")
 
   def findById(id: Long) = useDB{ db =>
     val filterQuery = for(post <- Posts.tableQuery if post.id === id) yield post
@@ -20,7 +24,7 @@ object PostDao extends UseDBFeature with CurrentTimeFeature {
   }
 
   def validateLimitOfThreadPostCount(threadId: Long): Future[Either[Throwable, Unit]] = countByThreadId(threadId).map { count =>
-    if (count <= 1000) Right(Unit) else Left(new IllegalStateException(s"thread has limited count posts."))
+    if (count <= LimitOfPostCount) Right(Unit) else Left(new IllegalStateException(s"thread has limited count posts."))
   }
 
   def create(threadId: Long, content: String, user: User, now:DateTime = currentTime) = {

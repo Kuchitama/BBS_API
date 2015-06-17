@@ -28,6 +28,12 @@ object ThreadDao extends UseDBFeature with CurrentTimeFeature {
     db.run(insert).map(_._1.flatten)
   }
 
+  def findByTitle(title:String, offset:Int, limit:Int, strict: Boolean = true) = useDB { db =>
+    val likeState = if(strict) title else s"%${title}%"
+    val filter = Threads.tableQuery.filter(_.title like likeState).drop(offset).take(limit)
+    db.run(filter.result).map(_.map(asThread))
+  }
+
 
   def asThread: PartialFunction[(Option[Long], String, String, Long, DateTime, DateTime), Thread] = {
     case (id: Option[Long], title: String, tags: String, accountId: Long, createdTime: DateTime, updatedTime: DateTime) => {

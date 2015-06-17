@@ -6,8 +6,9 @@
 GET     /                           controllers.Application.index
 
 # Thread
-GET     /api/v1/bbs/threads/:id                           controllers.ThreadController.index(id: Long)
-POST    /api/v1/bbs/threads                           controllers.ThreadController.create()
+GET     /api/v1/bbs/threads/search                  controllers.ThreadController.search(q:String, offset:Option[Int], limit:Option[Int], strict:Boolean ?= true)
+GET     /api/v1/bbs/threads/:id                     controllers.ThreadController.index(id: Long)
+POST    /api/v1/bbs/threads                         controllers.ThreadController.create()
 
 # Post
 GET     /api/v1/bbs/threads/:threadId/posts/:id     controllers.PostController.index(id: Long, threadId:Long)
